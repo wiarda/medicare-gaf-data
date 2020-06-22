@@ -81,13 +81,14 @@ const tabularizePage = (pageData) => {
     rows.push([]);
   }
 
-  rows.pop();
-  
+  while (idx < texts.length) {
+    last(rows).push(texts[idx++]);
+  }
 
   // break rows into columns -- items above the first row line are headers
   // MSA is clumped with first Urban area (between idx 0 & 2)
   // State and subsequent Urban areas are loose
-  // Wage Index and GAF are clumped (between idx 3 & 4)
+  // Wage Index and GAF are clumped (between idx 3 & 4) .. though of course there are exceptions
   return tail(rows).map((row) => {
     const cols = [[], []];
     for (let i = 0; i < row.length; ++i) {
@@ -99,12 +100,11 @@ const tabularizePage = (pageData) => {
     }
     
     return flatten(cols.map((el, idx) => {
+      const temp = el.join(" ");
       if (idx === 0) {
-        const temp = el.join(" ");
         return [temp.slice(0,4), temp.slice(5)]
       } else {
-        const temp = el[0] ? el[0].split(" ") : "";
-        return temp;
+        return temp.split(" ");
       }
     }));
     
